@@ -10,8 +10,6 @@ import { map, distance } from '../utils/helpers';
 export default function RainWater() {
 
   const waterMesh = React.useRef();
-  let groupMesh = new THREE.Object3D();
-
   const [waterDropPositions,] = useState([
     { x: 1, z: -13 },
     { x: -2, z: 4 },
@@ -69,15 +67,8 @@ export default function RainWater() {
     return mesh;
   }
 
-  const addAmbientLight = () => {
-    const obj = { color: '#fff' };
-    const light = new THREE.AmbientLight(obj.color, 1);
-
-    waterMesh.current.add(light);
-  }
-
   const createGrid = () => {
-
+    const groupMesh = new THREE.Object3D();
     const meshParams = {
       color: 0xffffff,
       emissive: 0x333399,
