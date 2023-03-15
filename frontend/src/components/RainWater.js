@@ -32,7 +32,7 @@ export default function RainWater() {
   const [radius, setRadius] = useState(1)
   const [motion, setMotion] = useState(0)
 
-  const grid = { cols: 40, rows: 40 };
+  const grid = { cols: 60, rows: 60 };
   const velocity = -.2;
   const waveLength = 300;
   const gutter = { size: 0 }
@@ -57,7 +57,7 @@ export default function RainWater() {
 
   const addWaterDrop = () => {
     if (waterMesh.current) {
-      const geometry = new THREE.SphereGeometry(0.03, 32, 16);
+      const geometry = new THREE.SphereGeometry(0.04, 10, 100);
       const material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, transparent: true });
       // const material = new THREE.MeshStandardMaterial( { color: 0xffffff, metalness:0.5, roughness:0, emissive:0x333399 } );
       const waterDrop = new THREE.Mesh(geometry, material);
@@ -164,7 +164,7 @@ export default function RainWater() {
       const waterDrop = addWaterDrop();
       const { x, z } = getRandomWaterDropPosition();
 
-      waterDrop.position.set(x, 50, z);
+      waterDrop.position.set(x, 5, z);
       if (waterMesh.current) {
         waterMesh.current.add(waterDrop);
       }
@@ -184,7 +184,7 @@ export default function RainWater() {
             }
           },
           onComplete: () => {
-            waterDrop.position.set(0, 50, 0);
+            waterDrop.position.set(0, 5, 0);
             waterMesh.current.remove(waterDrop);
           }
         });

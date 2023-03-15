@@ -1,4 +1,5 @@
-import React, { } from "react"
+import React, { useState } from "react"
+import { BlockPicker, SketchPicker } from "react-color";
 import * as THREE from 'three'
 import { Suspense } from 'react'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
@@ -8,19 +9,7 @@ import Header from "../components/header"
 import RainWater from '../components/RainWater';
 
 
-function RotatingBoxPlatform() {
-  const platformMesh = React.useRef();
-  useFrame(() => {
-    platformMesh.current.rotateY(0.03)
-  });
 
-  return (
-    <mesh ref={platformMesh} position={[0, 1, 0]}>
-      <boxBufferGeometry />
-      <meshPhongMaterial color="royalblue" />
-    </mesh>
-  );
-}
 
 function BottomScene() {
 
@@ -57,35 +46,58 @@ export function RoundPlatform(props) {
   );
 }
 function Scene() {
+  const [blockPickerColor, setBlockPickerColor] = useState("#37d67a");
+  const RotatingBoxPlatform = () => {
+    const platformMesh = React.useRef();
+    useFrame(() => {
+      platformMesh.current.rotateY(0.03)
+    });
 
+    return (
+      <mesh ref={platformMesh} position={[0, 1, 0]}>
+        <boxBufferGeometry />
+        <meshPhongMaterial color={blockPickerColor} />
+      </mesh>
+    );
+  }
   return (
     <>
       <Header />
-      <div id="canvas-container" style={{ width: "100vw", height: "100vh" }}>
-        <Canvas shadows gl={{ antialias: false }} camera={{ position: [0, 10, 45], near: 30, far: 500, fov: 12 }}>
-          <Suspense fallback={null}>
-            <BottomScene />
-            <RotatingBoxPlatform />
-            <Environment
-              background={true}
-              blur={0}
-              files={['TropicalSunnyDay_px.jpg', 'TropicalSunnyDay_nx.jpg', 'TropicalSunnyDay_py.jpg', 'TropicalSunnyDay_ny.jpg', 'TropicalSunnyDay_pz.jpg', 'TropicalSunnyDay_nz.jpg']}
-              path="./"
-              preset={null}
-              scene={undefined}
-              encoding={undefined}
-            />
-            <ContactShadows position={[0, -0.8, 0]} opacity={0.25} scale={10} blur={1.5} far={0.8} />
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-            />
-            <RoundPlatform />
-            <RainWater />
-            <ambientLight intensity={0.1} />
-            <directionalLight />
-          </Suspense>
-        </Canvas>
+      <div className="flex">
+        <div id="canvas-container" style={{ width: "80vw", height: "80vh" }}>
+          <Canvas shadows gl={{ antialias: false }} camera={{ position: [0, 10, 45], near: 30, far: 500, fov: 12 }}>
+            <Suspense fallback={null}>
+              <BottomScene />
+              <RotatingBoxPlatform />
+              <Environment
+                background={true}
+                blur={0}
+                files={['TropicalSunnyDay_px.jpg', 'TropicalSunnyDay_nx.jpg', 'TropicalSunnyDay_py.jpg', 'TropicalSunnyDay_ny.jpg', 'TropicalSunnyDay_pz.jpg', 'TropicalSunnyDay_nz.jpg']}
+                path="./"
+                preset={null}
+                scene={undefined}
+                encoding={undefined}
+              />
+              <ContactShadows position={[0, -0.8, 0]} opacity={0.25} scale={10} blur={1.5} far={0.8} />
+              <OrbitControls
+                enableZoom={false}
+                enablePan={false}
+              />
+              <RoundPlatform />
+              <RainWater />
+              <ambientLight intensity={0.1} />
+              <directionalLight />
+            </Suspense>
+          </Canvas>
+        </div>
+        <div className="pl-4 mt-4" style={{ width: "20vw", height: "100vh" }}>
+          <SketchPicker
+            color={blockPickerColor}
+            onChange={(color) => {
+              setBlockPickerColor(color.hex);
+            }}
+          />
+        </div>
       </div>
     </>
 
