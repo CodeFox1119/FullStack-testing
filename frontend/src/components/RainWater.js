@@ -14,6 +14,9 @@ export default function RainWater() {
 
   const [waterDropPositions,] = useState([
     { x: 1, z: -13 },
+    { x: -2, z: 4 },
+    { x: 10, z: -3 },
+    { x: 1, z: -3 },
     { x: 2, z: -3 },
     { x: -1.2, z: 3 },
     { x: 1.2, z: 3.5 },
@@ -52,7 +55,7 @@ export default function RainWater() {
 
   const addWaterDrop = () => {
     if (waterMesh.current) {
-      const geometry = new THREE.BoxBufferGeometry(0.05, 1, 0.05);
+      const geometry = new THREE.BoxGeometry(0.05, 1, 0.05);
       // const geometry = new THREE.BoxBufferGeometry(0.05, .3, 0.05);
       const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333399, transparent: true });
       const waterDrop = new THREE.Mesh(geometry, material);
@@ -146,27 +149,26 @@ export default function RainWater() {
       waterDrop.position.set(x, 50, z);
       if (waterMesh.current) {
         waterMesh.current.add(waterDrop);
-      }
-
-      if (pause) {
-        waterMesh.current.remove(waterDrop);
-        TweenMax.killAll(true);
-      } else {
-        TweenMax.to(waterDrop.position, 1, {
-          ease: Sine.easeIn,
-          y: -2,
-          onUpdate: () => {
-            if (waterDrop.position.y <= 1) {
-              setRadius(1);
-              setMotion(-1);
-              setRipple({ x, z });
+        if (pause) {
+          waterMesh.current.remove(waterDrop);
+          TweenMax.killAll(true);
+        } else {
+          TweenMax.to(waterDrop.position, 1, {
+            ease: Sine.easeIn,
+            y: -2,
+            onUpdate: () => {
+              if (waterDrop.position.y <= 1) {
+                setRadius(1);
+                setMotion(-1);
+                setRipple({ x, z });
+              }
+            },
+            onComplete: () => {
+              waterDrop.position.set(0, 50, 0);
+              waterMesh.current.remove(waterDrop);
             }
-          },
-          onComplete: () => {
-            waterDrop.position.set(0, 50, 0);
-            waterMesh.current.remove(waterDrop);
-          }
-        });
+          });
+        }
       }
     }, 1300);
     return () => clearInterval(interval);
