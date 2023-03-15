@@ -28,7 +28,7 @@ export default function RainWater() {
   const [radius, setRadius] = useState(1)
   const [motion, setMotion] = useState(0)
 
-  const grid = { cols: 30, rows: 30 };
+  const grid = { cols: 50, rows: 50 };
   const velocity = -.2;
   const waveLength = 300;
   const gutter = { size: 0 }

@@ -19,7 +19,7 @@ function BottomScene() {
   texture.repeat.set(10, 10)
 
   return (
-    <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3, 3, 3]}>
+    <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[5, 5, 5]}>
       <planeBufferGeometry attach="geometry" args={[10, 10]} />
       <meshBasicMaterial attach="material" map={texture} side={2} />
     </mesh>
