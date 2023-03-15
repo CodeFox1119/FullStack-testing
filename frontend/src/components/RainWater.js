@@ -129,25 +129,13 @@ export default function RainWater() {
     setRadius(updatedRadius)
     setMotion(updatedMotion);
   }
-  const addSpotLight = () => {
-    const obj = { color: '#fff' };
-    const light = new THREE.SpotLight(obj.color, 1);
-
-    light.position.set(0, 50, 0);
-    light.castShadow = true;
-
-    waterMesh.current.add(light);
-  }
   useEffect(() => {
     if (waterMesh.current) {
       window.addEventListener('visibilitychange', (evt) => {
         setPause(evt.target.hidden);
       }, false);
-      // addAmbientLight();
-      // addSpotLight();
       createGrid();
       addFloor();
-      addSpotLight();
     }
   }, [])
   useEffect(() => {
