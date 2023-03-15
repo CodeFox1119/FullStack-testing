@@ -11,7 +11,8 @@ import {
   CardFooter,
   Input,
   Checkbox,
-  Button
+  Button,
+  Typography
 } from "@material-tailwind/react";
 
 
@@ -73,6 +74,7 @@ export default function EditModel() {
       <Header />
       <Card className="w-50 p-4">
         <CardHeader color="blue" className="relative h-56">
+            <Typography className = "text-center mt-4">Edit Model</Typography>
         </CardHeader>
         <CardBody className="text-center">
           <Input label="Scale" success onChange={(e) => handChangeScale(e)} value={scaleValue} />

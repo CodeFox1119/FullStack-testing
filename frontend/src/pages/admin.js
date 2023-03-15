@@ -90,7 +90,9 @@ export default function Admin() {
   return (
     <>
       <Header />
+      <div className='w-full flex flex-row-reverse mt-4 pr-4'>
       <Button onClick={() => navigate('/add')}>Add New Model</Button>
+      </div>
       <DataTable
         columns={columns}
         data={data}
