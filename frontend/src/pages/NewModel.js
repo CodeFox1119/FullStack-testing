@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../components/header'
-import { API_URL } from '../constants';
+import { useNavigate } from 'react-router-dom';
+import { handleCreateNewModel } from '../utils/API';
 
 import {
   Card,
@@ -13,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 
 export default function NewModel() {
+  const navigate = useNavigate();
   const [file, setFile] = useState();
   const [scaleValue, setScaleValue] = useState(0);
   const [active, setActive] = useState(0);
@@ -22,7 +24,7 @@ export default function NewModel() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (!file) {
       return;
     }
@@ -30,13 +32,8 @@ export default function NewModel() {
     sendData.append('file', file)
     sendData.append('scale', scaleValue)
     sendData.append('state', active)
-    fetch(`${API_URL}/api/models`, {
-      method: 'POST',
-      body: sendData,
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
+    await handleCreateNewModel(sendData)
+    navigate('/admin')
   };
 
   const handChangeScale = (e) => {

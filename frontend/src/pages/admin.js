@@ -4,7 +4,7 @@ import DataTable from 'react-data-table-component';
 import { Button } from "@material-tailwind/react";
 import Header from '../components/header'
 
-import { API_URL } from '../constants';
+import { handleGetModels, handleDeleteModel } from '../utils/API';
 
 export default function Admin() {
 
@@ -55,43 +55,32 @@ export default function Admin() {
   const [data, setData] = React.useState([]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const response = await handleGetModels();
+      setData(response?.data)
+    }
     if (data.length === 0) {
-      fetch(`${API_URL}/api/models`, {
-        method: 'GET',
-      })
-        .then((res) => res.json())
-        .then((dataObject) => {
-          const data = dataObject.data;
-          setData(data)
-        }
-        )
-        .catch((err) => console.error(err));
+      fetchData();
     }
   }, [])
 
   const onHandleEditItem = (record) => {
     navigate(`/edit/${record.id}`);
   }
-  const onHandleDeleteItem = (record) => {
-    fetch(`${API_URL}/api/models/${record?.id}`, {
-      method: 'DELETE',
-    })
-      .then((res) => res.json())
-      .then((dataObject) => {
-        const deletedItemIndex = data.findIndex(item => item.id === record.id)
-        if (deletedItemIndex > -1) {
-          const tempData = data.splice(deletedItemIndex, 1);
-          setData(tempData)
-        }
-      }
-      )
-      .catch((err) => console.error(err));
+  const onHandleDeleteItem = async (record) => {
+    const response = await handleDeleteModel(record?.id);
+    const deletedItemIndex = data.findIndex(item => item.id === record.id)
+    if (deletedItemIndex > -1) {
+      const tempData = data;
+      tempData.splice(deletedItemIndex, 1);
+      setData(tempData)
+    }
   }
   return (
     <>
       <Header />
       <div className='w-full flex flex-row-reverse mt-4 pr-4'>
-      <Button onClick={() => navigate('/add')}>Add New Model</Button>
+        <Button onClick={() => navigate('/add')}>Add New Model</Button>
       </div>
       <DataTable
         columns={columns}

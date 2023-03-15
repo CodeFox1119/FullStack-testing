@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { BlockPicker, SketchPicker } from "react-color";
+import { SketchPicker } from "react-color";
 import * as THREE from 'three'
 import { Suspense } from 'react'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
