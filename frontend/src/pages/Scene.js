@@ -64,7 +64,7 @@ function Scene() {
     <>
       <Header />
       <div className="flex">
-        <div id="canvas-container" style={{ width: "80vw", height: "80vh" }}>
+        <div id="canvas-container" style={{ width: "100vw", height: "80vh" }}>
           <Canvas shadows gl={{ antialias: false }} camera={{ position: [0, 10, 45], near: 30, far: 500, fov: 12 }}>
             <Suspense fallback={null}>
               <BottomScene />

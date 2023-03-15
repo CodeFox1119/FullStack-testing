@@ -53,9 +53,8 @@ export default function RainWater() {
 
   const addWaterDrop = () => {
     if (waterMesh.current) {
-      const geometry = new THREE.SphereGeometry(0.04, 10, 100);
-      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, transparent: true });
-      // const material = new THREE.MeshStandardMaterial( { color: 0xffffff, metalness:0.5, roughness:0, emissive:0x333399 } );
+      const geometry = new THREE.BoxBufferGeometry(0.05, .3, 0.05);
+      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive:0x333399, transparent: true });
       const waterDrop = new THREE.Mesh(geometry, material);
       return waterDrop;
     }
