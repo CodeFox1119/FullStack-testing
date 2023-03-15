@@ -71,7 +71,7 @@ export default function Admin() {
     const response = await handleDeleteModel(record?.id);
     const deletedItemIndex = data.findIndex(item => item.id === record.id)
     if (deletedItemIndex > -1) {
-      const tempData = data;
+      const tempData = [...data];
       tempData.splice(deletedItemIndex, 1);
       setData(tempData)
     }

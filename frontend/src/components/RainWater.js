@@ -13,10 +13,6 @@ export default function RainWater() {
   const groupMesh = new THREE.Object3D();
 
   const [waterDropPositions,] = useState([
-    { x: -2, z: 1.8 },
-    { x: 1, z: -2 },
-    { x: 10, z: 8 },
-    { x: -11, z: -11 },
     { x: 12, z: -13 },
     { x: 1, z: -13 },
     { x: 2, z: -3 },
