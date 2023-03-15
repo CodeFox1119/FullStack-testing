@@ -10,10 +10,9 @@ import { map, distance } from '../utils/helpers';
 export default function RainWater() {
 
   const waterMesh = React.useRef();
-  const groupMesh = new THREE.Object3D();
+  let groupMesh = new THREE.Object3D();
 
   const [waterDropPositions,] = useState([
-    { x: 12, z: -13 },
     { x: 1, z: -13 },
     { x: 2, z: -3 },
     { x: -1.2, z: 3 },
@@ -28,7 +27,7 @@ export default function RainWater() {
   const [radius, setRadius] = useState(1)
   const [motion, setMotion] = useState(0)
 
-  const grid = { cols: 60, rows: 60 };
+  const grid = { cols: 30, rows: 30 };
   const velocity = -.2;
   const waveLength = 300;
   const gutter = { size: 0 }
@@ -44,7 +43,7 @@ export default function RainWater() {
     const material = new THREE.ShadowMaterial({ opacity: 0.3 });
     let floor = new THREE.Mesh(geometry, material);
     floor.name = 'floor';
-    floor.position.y = 10;
+    floor.position.y = -1;
     floor.rotateX(- Math.PI / 2);
     floor.receiveShadow = true;
     waterMesh.current.add(floor);
@@ -53,8 +52,9 @@ export default function RainWater() {
 
   const addWaterDrop = () => {
     if (waterMesh.current) {
-      const geometry = new THREE.BoxBufferGeometry(0.05, .3, 0.05);
-      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive:0x333399, transparent: true });
+      const geometry = new THREE.BoxBufferGeometry(0.05, 1, 0.05);
+      // const geometry = new THREE.BoxBufferGeometry(0.05, .3, 0.05);
+      const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x333399, transparent: true });
       const waterDrop = new THREE.Mesh(geometry, material);
       return waterDrop;
     }
@@ -77,7 +77,6 @@ export default function RainWater() {
 
     const meshParams = {
       color: 0xffffff,
-      // roughness: 0,
       emissive: 0x333399,
       metalness: 0.5,
       opacity: 0.1,
@@ -85,12 +84,11 @@ export default function RainWater() {
     };
 
     const material = new THREE.MeshStandardMaterial(meshParams);
-
+    let tempMesh = [...meshes]
     for (let row = 0; row < grid.rows; row++) {
-      meshes[row] = [];
-      setMeshes(meshes)
+      tempMesh[row] = [];
       for (let col = 0; col < grid.cols; col++) {
-        const geometry = new THREE.BoxGeometry(1, 0.1, 1);
+        const geometry = new THREE.BoxGeometry(1, .1, 1);
         const mesh = getMesh(geometry, material);
         mesh.position.y = -1;
         mesh.name = `cube-${row}-${col}`;
@@ -100,41 +98,38 @@ export default function RainWater() {
         pivot.scale.set(1, 1, 1);
         pivot.position.set(col + (col * gutter.size), 0, row + (row * gutter.size));
 
-        meshes[row][col] = pivot;
-        setMeshes(meshes)
+        tempMesh[row][col] = pivot;
         groupMesh.add(pivot);
       }
     }
-
+    setMeshes(tempMesh)
     const centerX = ((grid.cols) + ((grid.cols) * gutter.size)) * .4;
     const centerZ = ((grid.rows) + ((grid.rows) * gutter.size)) * .6;
-
     groupMesh.position.set(-centerX, 1, -centerZ);
     waterMesh.current.add(groupMesh);
   }
 
   const draw = () => {
+    let tempMesh = [...meshes];
     for (let row = 0; row < grid.rows; row++) {
       for (let col = 0; col < grid.cols; col++) {
-        const dist = distance(col, row, ripple.x - groupMesh.position.x, ripple.z - groupMesh.position.z);
-
+        const dist = distance(col, row, ripple.x - waterMesh.current.children[0].position.x, ripple.z - waterMesh.current.children[0].position.z);
         if (dist < radius) {
           const offset = map(dist, 0, -waveLength, -100, 100);
           const updatedAngle = angle + offset;
           const y = map(Math.sin(updatedAngle), -1, 0, motion > 0 ? 0 : motion, 0);
-          meshes[row][col].position.y = y;
-          setMeshes(meshes)
+          tempMesh[row][col].position.y = y;
         }
       }
     }
     const updatedAngle = angle - velocity * 1
-    setAngle(updatedAngle)
     const updatedRadius = radius - velocity * 1
-    setRadius(updatedRadius)
     const updatedMotion = motion - velocity / 8
+    setAngle(updatedAngle)
+    setRadius(updatedRadius)
     setMotion(updatedMotion);
   }
-  const addSpotLight =()=> {
+  const addSpotLight = () => {
     const obj = { color: '#fff' };
     const light = new THREE.SpotLight(obj.color, 1);
 
@@ -152,6 +147,7 @@ export default function RainWater() {
       // addSpotLight();
       createGrid();
       addFloor();
+      addSpotLight();
     }
   }, [])
   useEffect(() => {
@@ -159,7 +155,7 @@ export default function RainWater() {
       const waterDrop = addWaterDrop();
       const { x, z } = getRandomWaterDropPosition();
 
-      waterDrop.position.set(x, 5, z);
+      waterDrop.position.set(x, 50, z);
       if (waterMesh.current) {
         waterMesh.current.add(waterDrop);
       }
@@ -179,12 +175,12 @@ export default function RainWater() {
             }
           },
           onComplete: () => {
-            waterDrop.position.set(0, 5, 0);
+            waterDrop.position.set(0, 50, 0);
             waterMesh.current.remove(waterDrop);
           }
         });
       }
-    }, 1000);
+    }, 1300);
     return () => clearInterval(interval);
   }, []);
   useFrame(() => {
