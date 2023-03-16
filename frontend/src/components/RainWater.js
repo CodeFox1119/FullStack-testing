@@ -11,6 +11,7 @@ export default function RainWater() {
 
   const waterMesh = React.useRef();
   const [waterDropPositions,] = useState([
+    { x: 13, z: 23 },
     { x: 1, z: -13 },
     { x: -2, z: 4 },
     { x: 10, z: -3 },
